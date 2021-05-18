@@ -1,3 +1,5 @@
+//////////// VARS:
+
 // variables to keep track of quiz state
 var currentQuestionIndex = 0;
 var time = questions.length * 15;
@@ -14,6 +16,7 @@ var feedbackEl = document.getElementById("feedback")
 var questionsEl = document.getElementById("questions");
 var questionTitle = questionsEl.getElementsByTagName("h2");
 
+var userInfoEl = document.getElementById("user-info");
 // sound effects
 var sfxRight = new Audio("assets/sfx/correct.wav");
 var sfxWrong = new Audio("assets/sfx/incorrect.wav");
@@ -21,10 +24,9 @@ var sfxWrong = new Audio("assets/sfx/incorrect.wav");
 function startQuiz() {
   // hide start screen
   var startScreenEl = document.querySelector("#start-screen");
-  startScreenEl.style.display = "none"
+  startScreenEl.style.display = "none";
   // un-hide questions section
-  
-  questionsEl.style.display = "block"
+  questionsEl.classList.remove("hide");
 
   // start timer
   // Set interval to call clockTick every second
@@ -34,43 +36,68 @@ function startQuiz() {
 }
 
 function getQuestion() {
-  // get current question object from array
-  console.log(questionTitle)
+  var questionsEl = document.getElementById("questions");
+  var questionTitle = document.getElementById("question-title");
   
+  // get current question object from array
+  var currentQuestion = questions[currentQuestionIndex];
   // update title with current question
-
+  questionTitle.textContent = currentQuestion.title;
   // clear out any old question choices
-
+  choicesEl.innerHTML = "";
   // loop over choices
-
+  for (let i = 0; i < currentQuestion.choices.length; i++) {
+    var choices = currentQuestion.choices[i];
     // create new button for each choice
-
+    var choiceBtn = document.createElement("button");
+    
+    // add answer data attributes
+    choiceBtn.dataset.answer = choices;
+    // text
+    choiceBtn.textContent = choices;
     // attach click event listener to each choice
-
+    choiceBtn.addEventListener('click', questionClick)
+    
     // display on the page
-}
+    choicesEl.appendChild(choiceBtn);
+  }
 
+}
 function questionClick() {
   // check if user guessed wrong
+  var isCorrect = this.dataset.answer === questions[currentQuestionIndex].answer;
+  if (!isCorrect){    
+    
     // penalize time
-
+    time -= 5;
     // display new time on page
-
+    // ✅
     // play "wrong" sound effect
-
-  // else 
+    sfxWrong.play();
+    
+    userInfoEl.textContent = "Sorry, Wrong answer, please try again!"
+  
+  } 
+  else {
+    
     // play "right" sound effect
+    sfxRight.play();
+    
+  userInfoEl.textContent = "correct!!";
 
+  }
 
-  // flash right/wrong feedback on page for half a second
-
-  // move to next question
-
+    // flash right/wrong feedback on page for half a second 
+    console.log(userInfoEl)
+    userInfoEl.classList.add('show-info');
+    // move to next question
+  
+  
   // check if we've run out of questions
-    // quizEnd
-  // else 
-    // getQuestion
-}
+  // quizEnd
+  // else
+  // getQuestion
+
 
 function quizEnd() {
   // stop timer
@@ -85,6 +112,9 @@ function quizEnd() {
 function clockTick() {
   // update time
   time-- ;
+
+  // assign the time var to time span textContent
+  timerEl.textContent = time
 
   // check if user ran out of time
   if(time <= 0){
@@ -119,3 +149,4 @@ submitBtn.onclick = saveHighscore;
 startBtn.onclick = startQuiz;
 
 initialsEl.onkeyup = checkForEnter;
+}

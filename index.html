@@ -10,9 +10,17 @@
   </head>
 
   <body>
-    <div class="scores"><a href="highscores.html">View Highscores</a></div>
+    <audio src="assets/sfx/correct.wav"></audio>
+    <div class="scores">
+      <a href="highscores.html">
+        View Highscores
+      </a>
+    </div>
 
     <div class="timer">Time: <span id="time">0</span></div>
+
+    <!-- user message -->
+    <div id="user-info"></div>
 
     <div class="wrapper">
       <div id="start-screen" class="start">
@@ -42,7 +50,9 @@
       <div id="feedback" class="feedback hide"></div>
     </div>
 
+    <!-- questions -->
     <script src="./assets/js/questions.js"></script>
+    <!-- game logic -->
     <script src="./assets/js/logic.js"></script>
   </body>
 </html>
